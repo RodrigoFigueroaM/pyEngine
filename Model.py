@@ -26,7 +26,7 @@ class Model:
         self._vaoID = vaoID
 
     @staticmethod
-    def ListToArray(list, type):
+    def listToArray(list, type):
         vertices = np.asarray(list, dtype=type)
         return vertices
 

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 from PyQt5.QtGui import QVector3D, QVector2D
-
+from pyEngine import Model
+import numpy as np
 
 def ObjectLoader(fileName = None):
     vertices = []
@@ -66,6 +67,26 @@ def parseFaces(facesList):
         trianglesNormalIndex.append(int(values[2]) - 1)
     return trianglesIndex, trianglesTextureIndex, trianglesNormalIndex
 
+def loadObj( objfile):
+    drawingVertices = []
+    drawingIndices = []
+    objLoader = ObjectLoader(objfile)
+    vtr = objLoader[0]
+    drawingIndices = objLoader[1]
+    textureCoords = objLoader[2]
+    norms = objLoader[3]
+    verticesAndNormals = [(a, b, c) for (a, b, c) in zip(vtr, textureCoords, norms)]
+    for row in verticesAndNormals:
+        for vector in row:
+            drawingVertices.append(float(vector.x()))
+            drawingVertices.append(float(vector.y()))
+            try:
+                drawingVertices.append(float(vector.z()))
+            except:
+                pass
+    drawingVertices = Model.Model.listToArray(list=drawingVertices, type=np.float32)
+    drawingIndices = Model.Model.listToArray(list=drawingIndices, type=np.int32)
+    return drawingVertices, drawingIndices, vtr, textureCoords, norms
 
 if __name__ == "__main__":
     objLoader = ObjectLoader("./objs/Cube.obj")
