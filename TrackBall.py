@@ -1,7 +1,6 @@
 import math
 
 from PyQt5.QtGui import (QVector3D, QQuaternion)
-
 from pyEngine.Camera import Camera
 
 # //assuming IEEE-754(GLfloat), which i believe has max precision of 7 bits
