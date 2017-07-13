@@ -57,13 +57,13 @@ class GLProgram:
         self.program.release()
 
 
-    def initShaderProgram(self, *arg):
+    def initShaderProgram(self, vertFile, fragFile):
         """ :arg
             path to .vert program
             path to .frag program"""
         # shader program
-        self.program.addShaderFromSourceFile(QOpenGLShader.Vertex, arg[0])
-        self.program.addShaderFromSourceFile(QOpenGLShader.Fragment, arg[1])
+        self.program.addShaderFromSourceFile(QOpenGLShader.Vertex, vertFile)
+        self.program.addShaderFromSourceFile(QOpenGLShader.Fragment, fragFile)
         self.program.link()
         self.program.bind()
 
@@ -122,6 +122,12 @@ class GLProgram:
         self.program.setUniformValue('time', float(self.timer))
         self._fakeTimer += 0.001
 
+    def changeFragmentFile(self, fragfile):
+        self.program.removeShader(self.program.shaders()[-1])
+        self.program.addShaderFromSourceFile(QOpenGLShader.Fragment, fragfile)
+        self.program.link()
+        self.program.bind()
+
     @property
     def program(self):
         return self._program
@@ -155,14 +161,13 @@ class GLProgram:
         return self._indexesBufferObject
 
     @property
-    def image(self):
-        return self._image
+    def images(self):
+        return self._images
 
-    @image.setter
+    @images.setter
     def image(self, filename):
-        print(filename)
         self._image.load(filename)
-        self._image = self.image.mirrored()
+        self._images[-1] = self.image.mirrored()
 
     @property
     def timer(self):
