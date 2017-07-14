@@ -1,5 +1,5 @@
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QOpenGLBuffer, QOpenGLVertexArrayObject, QOpenGLTexture, QImage
 import OpenGL.GL as GL
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QOpenGLBuffer, QOpenGLVertexArrayObject, QOpenGLTexture, QImage
 
 
 class GLProgram:
