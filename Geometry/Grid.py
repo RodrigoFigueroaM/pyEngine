@@ -16,22 +16,22 @@ class Grid(Model):
         self._vertices = mainLine[:]
         numLines = 12
         for i in range(0, numLines - 1):
-            self._vertices.append(T * mainLine[0])
-            self._vertices.append(T * mainLine[1])
+            self.vertices.append(T * mainLine[0])
+            self.vertices.append(T * mainLine[1])
             T.translate(0.0, 0.0, 0.1)
 
         T.setToIdentity()
         T.translate(0.0, 0.0, 1.0)
         T.rotate(90, 0, 1, 0)
         for i in range(0, numLines - 1):
-            self._vertices.append(T * mainLine[0])
-            self._vertices.append(T * mainLine[1])
+            self.vertices.append(T * mainLine[0])
+            self.vertices.append(T * mainLine[1])
             T.translate(0.0, 0.0, 0.1)
 
         T.setToIdentity()
         T.scale(scale)
         for i in range(0, len(self.vertices)):
-            self._vertices[i] = T * self._vertices[i]
+            self.vertices[i] = T * self.vertices[i]
 
         self._verticesIndices = [i for i in range(0, len(self.vertices))]
         self._textureCoords = [QVector2D(0.0, 0.0) for i in range(0, len(self.vertices))]
@@ -48,3 +48,5 @@ class Grid(Model):
                     self._drawingVertices.append(float(vector.z()))
         self._drawingVertices = Model.listToArray(list=self._drawingVertices, type=np.float32)
         self._verticesIndices = Model.listToArray(list=self._verticesIndices, type=np.int32)
+
+

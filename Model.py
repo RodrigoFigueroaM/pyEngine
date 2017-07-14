@@ -1,23 +1,36 @@
 #! /usr/bin/env python
 
-import OpenGL.GL as GL
 import numpy as np
 from PyQt5.QtGui import QVector2D, QVector3D, QMatrix4x4
-
+from pyEngine.ObjLoader import loadObj
 
 class Model:
     def __init__(self, objfile=None):
         super(Model, self).__init__()
-        if objfile:
-            self._objFile = objfile
+        self._objFile = objfile
         self._vertices = []
         self._verticesIndices = []
         self._textureCoords = []
         self._normals = []
         self._drawingVertices = []
+        self._transformationMatrix = QMatrix4x4()
+        if objfile:
+            self.loadModel()
 
     def __str__(self):
         return '{}'.format(self.drawingVertices)
+
+    def loadModel(self):
+        self._drawingVertices,\
+        self._verticesIndices,\
+        self._vertices,\
+        self._textureCoords,\
+        self._normals = loadObj(self.modelFile)
+
+    @property
+    def modelFile(self):
+        return self._objFile
+
     @property
     def vertices(self):
         return self._vertices
@@ -37,6 +50,19 @@ class Model:
     @property
     def drawingVertices(self):
         return self._drawingVertices
+
+    @drawingVertices.setter
+    def drawingVertices(self, vertices):
+        self.drawingVertices = vertices
+
+    @property
+    def transformationMatrix(self):
+        return self._transformationMatrix
+
+    @transformationMatrix.setter
+    def transformationMatrix(self, transformationMatrix):
+        if type(QMatrix4x4()) == type(transformationMatrix):
+            self._transformationMatrix = transformationMatrix
 
     @staticmethod
     def listToArray(list, type):
