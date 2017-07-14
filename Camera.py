@@ -64,6 +64,16 @@ class Camera:
         self.position -= QVector3D(0.1, 0.0, 0.0)
         self.direction -= QVector3D(0.1, 0.0, 0.0)
 
+    def moveForward(self):
+        self._modelViewMatrix.setToIdentity()
+        self.position -= QVector3D(0.0, 0.0, 0.1)
+        self.direction -= QVector3D(0.0, 0.0, 0.1)
+
+    def moveBackward(self):
+        self._modelViewMatrix.setToIdentity()
+        self.position += QVector3D(0.0, 0.0, 0.1)
+        self.direction += QVector3D(0.0, 0.0, 0.1)
+
     def rotate(self, xangle, yangle, zangle):
         self._modelViewMatrix.rotate(xangle, 1, 0, 0)
         self._modelViewMatrix.rotate(yangle, 0, 1, 0)
@@ -71,6 +81,9 @@ class Camera:
 
     def rotate(self, mat):
         self.position = mat * self.position
+
+    def zoom(self, increment):
+        self.fov -= increment
 
     def translate(self, x, y, z):
         T = QMatrix4x4()
@@ -133,7 +146,7 @@ class Camera:
 
     @property
     def direction(self):
-        return self._dir
+        return self._dir.normalized()
 
     @direction.setter
     def direction(self, direction):
