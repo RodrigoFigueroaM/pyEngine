@@ -1,1 +1,1 @@
-__all__ = ["Camera", "GLProgram", "Model", "ObjLoader", "TrackBall"]
+__all__ = ["Geometry", "Camera", "GLProgram", "Model", "ObjLoader", "TrackBall"]

@@ -1,29 +1,42 @@
 #! /usr/bin/env python
-from PyQt5.QtGui import QVector2D, QVector3D
+
 import OpenGL.GL as GL
 import numpy as np
+from PyQt5.QtGui import QVector2D, QVector3D, QMatrix4x4
+
 
 class Model:
-    def __init__(self, vaoID, vertices):
+    def __init__(self, objfile=None):
         super(Model, self).__init__()
-        self._vaoID = vaoID
-        self._vertices = vertices
-        self._vertexCount = len(vertices)
-        self._generateVao()
+        if objfile:
+            self._objFile = objfile
+        self._vertices = []
+        self._verticesIndices = []
+        self._textureCoords = []
+        self._normals = []
+        self._drawingVertices = []
 
-    def _generateVao(self):
-        tempVao = GL.GLuint(0)
-        GL.glGenVertexArrays(1, tempVao)
-        GL.glBindVertexArray(tempVao)
-        return self.vaoID
+    def __str__(self):
+        return '{}'.format(self.drawingVertices)
+    @property
+    def vertices(self):
+        return self._vertices
 
     @property
-    def vaoID(self):
-        return self._vaoID
+    def verticesIndices(self):
+        return self._verticesIndices
 
-    @vaoID.setter
-    def vaoID(self, vaoID):
-        self._vaoID = vaoID
+    @property
+    def textureCoords(self):
+        return self._textureCoords
+
+    @property
+    def normals(self):
+        return self._normals
+
+    @property
+    def drawingVertices(self):
+        return self._drawingVertices
 
     @staticmethod
     def listToArray(list, type):
