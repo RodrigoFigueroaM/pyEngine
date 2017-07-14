@@ -36,21 +36,33 @@ class Camera:
         self._modelViewMatrix.setToIdentity()
 
     def lookAtCenter(self):
-        self._modelViewMatrix.setToIdentity()
-        direction = self._dir - self._pos
-        self._modelViewMatrix.lookAt(self._pos, direction, self._up)
+        self.lookAtTarget(QVector3D(0,0,0))
 
-    def lookAt(self, position, direction, up):
-        direction = self.direction - self.position
-        self._pos = position
-        self._dir = direction
-        self._up = up
+    def lookAtTarget(self, target):
         self._modelViewMatrix.setToIdentity()
-        self._modelViewMatrix.lookAt(self._pos, self._dir, self._up)
+        self._modelViewMatrix.lookAt(self._pos, self._dir + target, self._up)
 
-    def lookAt(self, position):
+    # moves are for 2D mostly
+    # TODO: work on 3D movement
+    def moveUp(self):
         self._modelViewMatrix.setToIdentity()
-        self._modelViewMatrix.lookAt(self._pos, self._dir - position, self._up)
+        self.position += QVector3D(0.0, 0.1, 0.0)
+        self.direction += QVector3D(0.0, 0.1, 0.0)
+
+    def moveDown(self):
+        self._modelViewMatrix.setToIdentity()
+        self.position -= QVector3D(0.0, 0.1, 0.0)
+        self.direction -= QVector3D(0.0, 0.1, 0.0)
+
+    def moveRight(self):
+        self._modelViewMatrix.setToIdentity()
+        self.position += QVector3D(0.1, 0.0, 0.0)
+        self.direction += QVector3D(0.1, 0.0, 0.0)
+
+    def moveLeft(self):
+        self._modelViewMatrix.setToIdentity()
+        self.position -= QVector3D(0.1, 0.0, 0.0)
+        self.direction -= QVector3D(0.1, 0.0, 0.0)
 
     def rotate(self, xangle, yangle, zangle):
         self._modelViewMatrix.rotate(xangle, 1, 0, 0)
