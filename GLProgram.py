@@ -1,5 +1,5 @@
-import OpenGL.GL as GL
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QOpenGLBuffer, QOpenGLVertexArrayObject, QOpenGLTexture, QImage
+import OpenGL.GL as GL
 
 
 class GLProgram:
@@ -95,11 +95,11 @@ class GLProgram:
         self.program.enableAttributeArray(location)
 
     def bindAttributes(self):
-        normal_offset = self.vertices[0].nbytes * 5
+        normal_offset = self.vertices[0].nbytes * 6
         tex_offset = self.vertices[0].nbytes * 3
-        stride = self.vertices[0].nbytes * 8
+        stride = self.vertices[0].nbytes * 9
         self._program.setAttributeBuffer(0, GL.GL_FLOAT, 0, 3, stride)
-        self._program.setAttributeBuffer(1, GL.GL_FLOAT, tex_offset, 2, stride)
+        self._program.setAttributeBuffer(1, GL.GL_FLOAT, tex_offset, 3, stride)
         self._program.setAttributeBuffer(2, GL.GL_FLOAT, normal_offset, 3, stride)
 
     def bind(self):
