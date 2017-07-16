@@ -34,8 +34,8 @@ class Grid(Model):
             self.vertices[i] = T * self.vertices[i]
 
         self._verticesIndices = [i for i in range(0, len(self.vertices))]
-        self._textureCoords = [QVector2D(0.0, 0.0) for i in range(0, len(self.vertices))]
-        self._normals = [QVector3D(0, 0, 0) for i in range(0, len(self.vertices))]
+        self._textureCoords = [QVector3D(0.0, 0.0, 0.0) for i in range(0, len(self.vertices))]
+        self._normals = [QVector3D(0.0, 0.0, 0.0) for i in range(0, len(self.vertices))]
 
     def makeGrid(self):
         gridVericesAndNormals = [(a, b, c) for (a, b, c) in zip(self.vertices, self.textureCoords, self.normals)]
