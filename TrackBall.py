@@ -6,6 +6,7 @@ from pyEngine.Camera import Camera
 # //assuming IEEE-754(GLfloat), which i believe has max precision of 7 bits
 EPSILON = 1.0e-5
 
+
 class TrackBall:
     def __init__(self):
         super(TrackBall, self).__init__()
@@ -23,7 +24,7 @@ class TrackBall:
         length = QVector3D.dotProduct(QVector3D(x, y, 0), QVector3D(x, y, 0))
         z = 0
         if length <= 1.0:
-            z = math.sqrt(1.0 - length)  # 1.0 is teh radius of the ball
+            z = math.sqrt(1.0 - length)  # 1.0 is the radius of the ball
             pos = QVector3D(-x, y, z)
         else:
             pos = QVector3D(-x, y, z).normalized()
@@ -79,10 +80,3 @@ if __name__ == '__main__':
     tb.clicked(100, 200, 250, 500)
     tb.move(5, 6, 250, 500)
     print(tb.move(0, 6, 250, 500).scalar())
-
-
-
-
-
-
-
