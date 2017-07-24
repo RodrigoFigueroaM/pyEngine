@@ -115,18 +115,64 @@ class GLProgram:
         self.program.release()
 
     def setUniformValue(self, uniform, value):
-        # print(uniform, value)
         self.program.setUniformValue(uniform, value)
 
     def bindTimer(self):
         self.program.setUniformValue('time', float(self.timer))
         self._fakeTimer += 0.001
 
+    def changeVertexFile(self, vertexfile):
+        self.program.removeShader(self.program.shaders()[0])
+        self.program.addShaderFromSourceFile(QOpenGLShader.Vertex, vertexfile)
+        self.program.link()
+        self.program.bind()
+
     def changeFragmentFile(self, fragfile):
         self.program.removeShader(self.program.shaders()[-1])
         self.program.addShaderFromSourceFile(QOpenGLShader.Fragment, fragfile)
         self.program.link()
         self.program.bind()
+
+    def changeVertexFromSourceCode(self, vertexCode):
+        self.program.removeShader(self.program.shaders()[0])
+        print(self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode))
+        self.program.link()
+        self.program.bind()
+
+    def changeFragmentFromSourceCode(self, fragCode):
+        self.program.removeShader(self.program.shaders()[1])
+        print(self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, fragCode))
+        self.program.link()
+        self.program.bind()
+
+    def changeVertexFromSourceCode(self, vertexCode):
+        self.program.removeShader(self.program.shaders()[0])
+        print(self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode))
+        self.program.link()
+        self.program.bind()
+
+    def changeVertexAndFragmentFromSourceCode(self, vertexCode, fragCode):
+        # self.program.removeAllShaders()
+        # self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode)
+        # self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, fragCode)
+        # self.program.link()
+        # self.program.bind()
+        vertexShader = QOpenGLShader(QOpenGLShader.Vertex)
+        fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
+        if not vertexShader.compileSourceCode(vertexCode):
+            return vertexShader.log()
+        if not fragmentShader.compileSourceCode(fragCode):
+            return fragmentShader.log()
+        print(self.program.shaders())
+        self.program.removeAllShaders()
+        print(self.program.shaders())
+        self.program.addShader(vertexShader)
+        self.program.addShader(fragmentShader)
+        print(self.program.shaders())
+        self.program.link()
+        self.program.bind()
+        return 'Vertex Shader and Fragment Shader compiled Successfully'
+
 
     @property
     def program(self):
