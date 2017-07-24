@@ -156,10 +156,10 @@ class GLProgram:
         fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
         vertexShader.compileSourceCode(vertexCode)
         if not vertexShader.isCompiled():
-            return vertexShader.log()
+            return 'Vertex Shader: \n{}'.format(vertexShader.log())
         fragmentShader.compileSourceCode(fragCode)
         if not fragmentShader.isCompiled():
-            return fragmentShader.log()
+            return 'Fragment Shader: \n{}'.format(fragmentShader.log())
         self.program.removeAllShaders()
         self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode)
         self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, fragCode)
