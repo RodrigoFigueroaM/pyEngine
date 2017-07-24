@@ -152,23 +152,18 @@ class GLProgram:
         self.program.bind()
 
     def changeVertexAndFragmentFromSourceCode(self, vertexCode, fragCode):
-        # self.program.removeAllShaders()
-        # self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode)
-        # self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, fragCode)
-        # self.program.link()
-        # self.program.bind()
+        print('here')
         vertexShader = QOpenGLShader(QOpenGLShader.Vertex)
         fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
-        if not vertexShader.compileSourceCode(vertexCode):
+        vertexShader.compileSourceCode(vertexCode)
+        if not vertexShader.isCompiled():
             return vertexShader.log()
-        if not fragmentShader.compileSourceCode(fragCode):
+        fragmentShader.compileSourceCode(fragCode)
+        if not fragmentShader.isCompiled():
             return fragmentShader.log()
-        print(self.program.shaders())
         self.program.removeAllShaders()
-        print(self.program.shaders())
-        self.program.addShader(vertexShader)
-        self.program.addShader(fragmentShader)
-        print(self.program.shaders())
+        self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, vertexCode)
+        self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, fragCode)
         self.program.link()
         self.program.bind()
         return 'Vertex Shader and Fragment Shader compiled Successfully'
