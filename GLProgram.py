@@ -152,7 +152,6 @@ class GLProgram:
         self.program.bind()
 
     def changeVertexAndFragmentFromSourceCode(self, vertexCode, fragCode):
-        print('here')
         vertexShader = QOpenGLShader(QOpenGLShader.Vertex)
         fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
         vertexShader.compileSourceCode(vertexCode)
