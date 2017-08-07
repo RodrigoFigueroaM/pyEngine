@@ -4,6 +4,7 @@ import numpy as np
 from PyQt5.QtGui import QVector2D, QVector3D, QMatrix4x4
 from pyEngine.ObjLoader import loadObj
 
+
 class Model:
     def __init__(self, objfile=None):
         super(Model, self).__init__()
