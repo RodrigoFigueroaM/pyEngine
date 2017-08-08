@@ -9,12 +9,14 @@ class Camera:
                  fov = 90):
         super(Camera, self).__init__()
         self._pos = position
-        self._dir = direction
+        self._dir = (direction - self._pos).normalized()
         self._up = up
         self._fov = fov
+        self._right = QVector3D.crossProduct(self.direction, self.position)
+        self._center = self.position + self.direction
         self._projectionMatrix = QMatrix4x4()
         self._modelViewMatrix = QMatrix4x4()
-        self._normalMatrix =QMatrix4x4()
+        self._normalMatrix = QMatrix4x4()
 
     def setOrthographic(self,  left=-1.0, right=1.0, bottom=-1.0, top=1.0, near=0.1, far=20.0):
         self.projectionMatrix.setToIdentity()
@@ -136,6 +138,14 @@ class Camera:
         worldCoord = invertedViewMatrix * eyeCoord
         return QVector3D(worldCoord.x(), worldCoord.y(), worldCoord.z())
 
+    def rayCast(self, x, y):
+        """Function used for ray tracing
+        :param x: a coordinate
+        :param y:  a coordinate
+        :return:
+        """
+        pass
+
     @property
     def position(self):
         return self._pos
@@ -146,6 +156,7 @@ class Camera:
 
     @property
     def direction(self):
+        self._dir = self._dir - self._pos
         return self._dir.normalized()
 
     @direction.setter
@@ -163,11 +174,22 @@ class Camera:
 
     @property
     def up(self):
-        return self._up
+        self._up = QVector3D.crossProduct(self.direction, self._right)
+        return self._up.normalized()
 
     @up.setter
     def up(self, up):
         self._up = up
+
+    @property
+    def center(self):
+        self._center = self.position + self.direction
+        return self._center
+
+    @property
+    def right(self):
+        self._right = QVector3D.crossProduct(self._up, self.direction)
+        return self._right
 
     @property
     def projectionMatrix(self):
@@ -208,6 +230,31 @@ class Camera:
         y /= (height / 2)
         x /= (width / 2)
         return x, y, -1.0
+
+    class Ray:
+        """generate a ray = e + td"""
+        def __init__(self, origin, direction):
+            self.e = origin
+            self.d = direction
+
+        def __str__(self):
+            return "e = {}\nd = {}".format(self.e, self.d)
+
+    def rayCast(self, x, y, width, height):
+        mx = (x + 0.5) / width
+        my = (((height - y) + .5) / height)
+        # normalizedCoordinate = self.devicePortCoordinates(x, y, width, height)
+        # x = x/width - 0.5
+        # y = y/width - 0.5
+        imagePoint = mx * self.right + my * self.up + self.position + self.direction
+        rayDirection = (imagePoint - self.position).normalized()
+        # rayDirection.setZ(0)
+        return Camera.Ray(self.position, rayDirection)
+
+
+
+
+
 
 
 if __name__ == '__main__':
