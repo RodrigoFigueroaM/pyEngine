@@ -10,6 +10,7 @@ class Camera:
         super(Camera, self).__init__()
         self._pos = position
         self._dir = (direction - self._pos).normalized()
+        # self._dir = direction.normalized()
         self._up = up
         self._fov = fov
         self._right = QVector3D.crossProduct(self.direction, self.position)
@@ -38,11 +39,11 @@ class Camera:
         self._modelViewMatrix.setToIdentity()
 
     def lookAtCenter(self):
-        self.lookAtTarget(QVector3D(0,0,0))
+        self.lookAtTarget(QVector3D(0, 0, 0))
 
     def lookAtTarget(self, target):
         self._modelViewMatrix.setToIdentity()
-        self._modelViewMatrix.lookAt(self._pos, self._dir + target, self._up)
+        self._modelViewMatrix.lookAt(self._pos, target, self._up)
 
     # moves are for 2D mostly
     # TODO: work on 3D movement
@@ -137,14 +138,6 @@ class Camera:
         invertedViewMatrix = self.modelViewMatrix.inverted()[0]
         worldCoord = invertedViewMatrix * eyeCoord
         return QVector3D(worldCoord.x(), worldCoord.y(), worldCoord.z())
-
-    def rayCast(self, x, y):
-        """Function used for ray tracing
-        :param x: a coordinate
-        :param y:  a coordinate
-        :return:
-        """
-        pass
 
     @property
     def position(self):
