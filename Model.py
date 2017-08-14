@@ -5,7 +5,7 @@ from PyQt5.QtGui import QVector2D, QVector3D, QMatrix4x4
 from pyEngine.ObjLoader import loadObj
 
 
-class Model:
+class Model(object):
     def __init__(self, objfile=None):
         super(Model, self).__init__()
         self._objFile = objfile

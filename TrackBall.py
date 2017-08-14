@@ -7,7 +7,7 @@ from pyEngine.Camera import Camera
 EPSILON = 1.0e-5
 
 
-class TrackBall:
+class TrackBall(object):
     def __init__(self):
         super(TrackBall, self).__init__()
         self._target = QVector3D(0, 0, 0)

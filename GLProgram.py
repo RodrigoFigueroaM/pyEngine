@@ -2,7 +2,7 @@ from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QOpenGLBuffer, QOpe
 import OpenGL.GL as GL
 
 
-class GLProgram:
+class GLProgram(object):
     def __init__(self, context, numAttibutesInvbo = 1):
         super(GLProgram, self).__init__()
         self._fakeTimer = 0

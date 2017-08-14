@@ -1,15 +1,18 @@
+#! /usr/bin/env python
 from PyQt5.QtGui import (QMatrix4x4, QVector3D, QVector4D)
+import math
 
 
-class Camera:
+class Camera(object):
     """docstring for Camera"""
     def __init__(self, position=QVector3D(0, 0, 1),
-                 direction=QVector3D(0, 0, 0),
+                 lookAt=QVector3D(0, 0, 0),
                  up=QVector3D(0, 1, 0),
                  fov = 90):
         super(Camera, self).__init__()
         self._pos = position
-        self._dir = (direction - self._pos).normalized()
+        self._lookAt = lookAt
+        self._dir = (lookAt - self._pos).normalized()
         # self._dir = direction.normalized()
         self._up = up
         self._fov = fov
@@ -45,8 +48,6 @@ class Camera:
         self._modelViewMatrix.setToIdentity()
         self._modelViewMatrix.lookAt(self._pos, target, self._up)
 
-    # moves are for 2D mostly
-    # TODO: work on 3D movement
     def moveUp(self):
         self._modelViewMatrix.setToIdentity()
         self.position += QVector3D(0.0, 0.1, 0.0)
@@ -149,7 +150,7 @@ class Camera:
 
     @property
     def direction(self):
-        self._dir = self._dir - self._pos
+        self._dir = self._lookAt - self._pos
         return self._dir.normalized()
 
     @direction.setter
@@ -233,17 +234,61 @@ class Camera:
         def __str__(self):
             return "e = {}\nd = {}".format(self.e, self.d)
 
-    def rayCast(self, x, y, width, height):
-        mx = (x + 0.5) / width
-        my = (((height - y) + .5) / height)
-        # normalizedCoordinate = self.devicePortCoordinates(x, y, width, height)
-        # x = x/width - 0.5
-        # y = y/width - 0.5
-        imagePoint = mx * self.right + my * self.up + self.position + self.direction
-        rayDirection = (imagePoint - self.position).normalized()
-        # rayDirection.setZ(0)
-        return Camera.Ray(self.position, rayDirection)
+    # @staticmethod
+    def devicePortCoordinatesRayTracing(self, x, y, width, height):
+        # xratio = 1.0
+        # yratio = 1.0
+        # if width > height:
+        #     xratio = width / height
+        #     yratio = 1.0
+        # elif width < height:
+        #     xratio = 1.0
+        #     yratio = width / height
+        pixelScreenX = (x + 0.5) / width
+        pixelScreenY = (y + 0.5) / height
+        mx = (2 * pixelScreenX - 1) * math.tan(self._fov / 2 * math.pi / 180) # 0.5 so that it passes through the center
+        my = (1 - 2 * pixelScreenY) * math.tan(self._fov / 2 * math.pi / 180)
+        return mx, my
 
+    def _makeCoordianteSystem(self):
+        pass
+
+    def rayCast(self, i, j, width, height):
+        # Eye Coordinate System
+        origin = self.position
+        n = (origin - QVector3D(0, 0, 0)).normalized()
+        u = QVector3D.crossProduct(self._up, n).normalized()
+        v = QVector3D.crossProduct(n, u).normalized()
+
+        # Image Plane setup
+        planeCenter = origin + n
+        d = (origin - planeCenter).length()
+        aspectRatio = width / height
+        H = math.tan(aspectRatio * self.fov) * 2 * d
+        W = H * aspectRatio
+        C = origin - n * d
+        L = C - u * W / 2 - v * H/2
+        pixelWidth = W / width
+        pixelHeight = H / height
+
+        s = L + u * i * pixelWidth + v * j * pixelHeight
+        print(s)
+        return Camera.Ray(origin, (s - origin).normalized())
+
+    def rayCastBook(self):
+        pass
+
+    def rayCastStack(self, i, j, width, height):
+        direction = self.direction
+        right = QVector3D.crossProduct(direction, self._up).normalized()
+        up = QVector3D.crossProduct(direction, right) * -1.0
+        center = self.position + direction
+        print(up)
+        # normalizedI = (i/width)- 0.5
+        # normalizedJ = (j /height) - 0.5
+        s = center + i * right + j * up
+        # print((self.position - center).length())
+        return Camera.Ray(self.position, (s - self.position))
 
 
 
